@@ -1,6 +1,7 @@
 package com.mehboob.excelreaderandroidapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -36,6 +39,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder>{
      holder.txtCount.setText(" "+data.getDisplayCount()  );
      holder.txtWord.setText(data.getWip());
      holder.txtWordMeaning.setText(data.getMeaning());
+
+
+     holder.itemView.setOnClickListener(v -> {
+
+         Gson gson= new Gson();
+
+         Intent i = new Intent(context, WordDetailActivity.class);
+         i.putExtra("data",gson.toJson(data));
+         context.startActivity(i);
+
+
+     });
 
     }
 
