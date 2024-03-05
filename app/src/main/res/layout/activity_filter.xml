@@ -25,37 +25,39 @@
             android:textStyle="bold" />
 
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/radioGroupCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
 
-            <CheckBox
+            <RadioButton
                 android:textSize="18sp"
-                android:layout_weight="1"
-                android:id="@+id/checkboxWords"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Words" />
 
-            <CheckBox
-                android:textSize="18sp"
                 android:layout_weight="1"
-                android:id="@+id/checkboxPhrases"
+                android:id="@+id/radioButtonWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phrases" />
+                android:text="Word" />
 
-            <CheckBox
+            <RadioButton
                 android:textSize="18sp"
                 android:layout_weight="1"
-                android:id="@+id/checkboxIdioms"
+                android:id="@+id/radioButtonPhrases"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Idioms" />
-        </LinearLayout>
+                android:text="Phrase" />
+
+            <RadioButton
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/radioButtonIdioms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Idiom" />
+        </RadioGroup>
 
         <!-- Filter by Tags -->
         <TextView
@@ -66,35 +68,37 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/radioGroupTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp">
 
-            <CheckBox
+            <RadioButton
                 android:textSize="18sp"
                 android:layout_weight="1"
-                android:id="@+id/checkboxBusiness"
+                android:id="@+id/radioButtonBusiness"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Business" />
 
-            <CheckBox
+            <RadioButton
                 android:textSize="18sp"
                 android:layout_weight="1"
-                android:id="@+id/checkboxSports"
+                android:id="@+id/radioButtonSports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sports" />
 
-            <CheckBox
+            <RadioButton
                 android:textSize="18sp"
                 android:layout_weight="1"
-                android:id="@+id/checkboxCasual"
+                android:id="@+id/radioButtonCasual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Casual" />
-        </LinearLayout>
+        </RadioGroup>
 
 
         <!-- Buttons -->
@@ -105,7 +109,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="16dp">
 

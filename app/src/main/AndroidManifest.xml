@@ -13,6 +13,12 @@
         android:theme="@style/Theme.ExcelReaderAndroidApp"
         tools:targetApi="31">
         <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WordsActivity"
+            android:exported="false" />
+        <activity
             android:name=".FilterActivity"
             android:exported="false" />
         <activity
