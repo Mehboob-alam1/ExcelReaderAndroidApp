@@ -12,15 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.Holder>{
     private Context context;
-    private List<ExcelDataModel> list;
+    private ArrayList<ExcelDataModel> list;
 
-    public Adapter(Context context, List<ExcelDataModel> list) {
+    public Adapter(Context context, ArrayList<ExcelDataModel> list) {
         this.context = context;
         this.list = list;
+    }
+
+    public void setList(ArrayList<ExcelDataModel> list) {
+        this.list.clear();
+        this.list.addAll(list);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -36,7 +43,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder>{
 
      ExcelDataModel data=   list.get(position);
      holder.txtWordType.setText(data.getCategory());
-     holder.txtCount.setText(" "+data.getDisplayCount()  );
+     holder.txtCount.setText(" "+data.getDisplayCount() +" times" );
      holder.txtWord.setText(data.getWip());
      holder.txtWordMeaning.setText(data.getMeaning());
 

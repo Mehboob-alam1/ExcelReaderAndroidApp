@@ -1,6 +1,9 @@
 package com.mehboob.excelreaderandroidapp;
 
-public class ExcelDataModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ExcelDataModel implements Parcelable {
 
     private int sr;
     private String category;
@@ -88,4 +91,47 @@ public class ExcelDataModel {
     public void setDisplayCount(int displayCount) {
         this.displayCount = displayCount;
     }
+
+
+
+    protected ExcelDataModel(Parcel in) {
+        sr = in.readInt();
+        category = in.readString();
+        wip = in.readString();
+        meaning = in.readString();
+        sampleSentence = in.readString();
+        customTag = in.readString();
+        readCount = in.readInt();
+        displayCount = in.readInt();
+    }
+
+    public static final Creator<ExcelDataModel> CREATOR = new Creator<ExcelDataModel>() {
+        @Override
+        public ExcelDataModel createFromParcel(Parcel in) {
+            return new ExcelDataModel(in);
+        }
+
+        @Override
+        public ExcelDataModel[] newArray(int size) {
+            return new ExcelDataModel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(sr);
+        dest.writeString(category);
+        dest.writeString(wip);
+        dest.writeString(meaning);
+        dest.writeString(sampleSentence);
+        dest.writeString(customTag);
+        dest.writeInt(readCount);
+        dest.writeInt(displayCount);
+    }
+
 }

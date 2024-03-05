@@ -1,0 +1,129 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="16dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <!-- Filter by Category -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter by Category"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxWords"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Words" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxPhrases"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phrases" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxIdioms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Idioms" />
+        </LinearLayout>
+
+        <!-- Filter by Tags -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Filter by Tags"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxBusiness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Business" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxSports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sports" />
+
+            <CheckBox
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:id="@+id/checkboxCasual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Casual" />
+        </LinearLayout>
+
+
+        <!-- Buttons -->
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp">
+
+
+        <Button
+            android:id="@+id/btnClearFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="Clear Filters" />
+
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Apply Filter" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

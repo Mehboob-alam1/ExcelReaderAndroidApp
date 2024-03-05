@@ -1,0 +1,27 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- First Line -->
+    <item android:top="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FF0000" /> <!-- Line color -->
+            <size android:height="4dp" /> <!-- Line height -->
+        </shape>
+    </item>
+
+    <!-- Space between the lines -->
+    <item android:top="5dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" /> <!-- Transparent color for space -->
+            <size android:height="1dp" /> <!-- Space height -->
+        </shape>
+    </item>
+
+    <!-- Second Line -->
+    <item android:bottom="6dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#00FF00" /> <!-- Line color -->
+            <size android:height="4dp" /> <!-- Line height -->
+        </shape>
+    </item>
+
+</layer-list>
