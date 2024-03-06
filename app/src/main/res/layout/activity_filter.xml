@@ -25,7 +25,7 @@
             android:textStyle="bold" />
 
 
-        <RadioGroup
+        <LinearLayout
             android:id="@+id/radioGroupCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:orientation="horizontal">
 
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
 
                 android:layout_weight="1"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="Word" />
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:id="@+id/radioButtonPhrases"
@@ -50,14 +50,14 @@
                 android:layout_height="wrap_content"
                 android:text="Phrase" />
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:id="@+id/radioButtonIdioms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Idiom" />
-        </RadioGroup>
+        </LinearLayout>
 
         <!-- Filter by Tags -->
         <TextView
@@ -68,14 +68,14 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <RadioGroup
+        <LinearLayout
             android:id="@+id/radioGroupTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="16dp">
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:id="@+id/radioButtonBusiness"
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="Business" />
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:id="@+id/radioButtonSports"
@@ -91,14 +91,14 @@
                 android:layout_height="wrap_content"
                 android:text="Sports" />
 
-            <RadioButton
+            <CheckBox
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:id="@+id/radioButtonCasual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Casual" />
-        </RadioGroup>
+        </LinearLayout>
 
 
         <!-- Buttons -->

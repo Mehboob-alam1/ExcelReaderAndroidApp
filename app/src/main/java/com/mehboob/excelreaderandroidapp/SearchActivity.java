@@ -1,58 +1,40 @@
 package com.mehboob.excelreaderandroidapp;
 
-import androidx.annotation.Nullable;
+
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.SearchView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.mehboob.excelreaderandroidapp.databinding.ActivityMainBinding;
+import com.google.gson.Gson;
+import com.mehboob.excelreaderandroidapp.databinding.ActivitySearchBinding;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+
     private ArrayList<ExcelDataModel> list;
-    private List<ExcelDataModel> dataList;
-
-    private Set<String> selectedFilters;
-
     private ArrayList<ExcelDataModel> filteredList;
-    private static final int FILTER_REQUEST_CODE = 1;
-    private boolean isHorizontalOrientation = true;
-    private SharedPreferences sharedPreferences;
-    Adapter adapter;
-    SharedPreferences sharedPreferences1;
-    LinearLayoutManager layoutManager;
+    private ActivitySearchBinding binding;
+    private SearchAdapter adapter;
+    private ListView listView;
+    private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isHorizontalOrientation = sharedPreferences.getBoolean("isHorizontal", true);
-        sharedPreferences1 = getPreferences(Context.MODE_PRIVATE);
-
-
-
-
-         layoutManager = new LinearLayoutManager(this);
-
 
         list = new ArrayList<>();
         filteredList = new ArrayList<>(list);
@@ -98,133 +80,53 @@ public class MainActivity extends AppCompatActivity {
         list.add(new ExcelDataModel(25, "Phrase", "Arm twisting", "", "The manager resorted to arm-twisting tactics to get the employees to comply with his demands.", "", 0, 0));
         list.add(new ExcelDataModel(27, "Phrase", "Tongues wagging", "Chk Tongue Lashing", "The news of the celebrity divorce had tongues wagging in the entertainment industry.", "", 0, 0));
 
+        adapter = new SearchAdapter(list,this);
+       binding.listView.setAdapter(adapter);
 
-        setRecyclerView(isHorizontalOrientation);
-
-        binding.textVertical.setOnClickListener(v -> {
-            isHorizontalOrientation = !isHorizontalOrientation;
-            setRecyclerView(isHorizontalOrientation);
-
-            saveOrientationPreference(isHorizontalOrientation);
-        });
-        binding.imgFilter.setOnClickListener(v -> startFilterActivity());
-
-        binding.imgImportExport.setOnClickListener(v -> {
-            showOptionsPopup();
-        });
-
-        binding.imageSearch.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SearchActivity.class)));
-
-        if (sharedPreferences1 != null) {
-            selectedFilters = sharedPreferences1.getStringSet("selectedFilters", new HashSet<>());
-
-            loadAndApplyFilters(list, selectedFilters);
-        }
-    }
+       binding.listView.setLayoutManager(new LinearLayoutManager(this));
 
 
-    private void startFilterActivity() {
-        Intent intent = new Intent(this, FilterActivity.class);
-        startActivityForResult(intent, FILTER_REQUEST_CODE);
-    }
-
-    private void saveOrientationPreference(boolean isHorizontal) {
-        // Save the orientation preference in SharedPreferences
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isHorizontal", isHorizontal);
-        editor.apply();
-    }
-
-    private void loadAndApplyFilters(ArrayList<ExcelDataModel> list, Set<String> selectedFilters) {
-        // Load filter preferences and apply filters
-//        String selectedCategory = sharedPreferences.getString("selected_category", null);
-//        String selectedTag = sharedPreferences.getString("selected_tag", null);
-//
-//        Log.d("FilterM", selectedCategory + " ");
-//        Log.d("FilterM", selectedTag + " ");
-//        // Apply filters if preferences are set
-//        if (selectedCategory != null || selectedTag != null) {
-//            applyFilter(selectedCategory, selectedTag);
-//        }
 
 
-        filteredList.clear();
-        for (ExcelDataModel data : list) {
-            if (data != null) {
-                if (selectedFilters.contains(data.getCategory()) || selectedFilters.contains(data.getCustomTag())) {
-                    filteredList.add(data);
-                }
-            }
-
-        }
-
-        // Update the RecyclerView with the filtered list
-        adapter.setList(filteredList);
-        adapter.notifyDataSetChanged();
-    }
-
-//    private void applyFilter(String selectedCategory, String selectedTag) {
-//        // Filter the list based on the selected category and tag
-//        filteredList.clear();
-//        for (ExcelDataModel data : list) {
-//            if (data != null) {
-//                if (data.getCategory().equals(selectedCategory) || data.getCustomTag().equals(selectedTag)) {
-//                    Log.d("Filter", selectedCategory + " Equal " + data.getCategory());
-//                    Log.d("Filter", selectedTag + " Equal " + data.getCustomTag());
-//                    filteredList.add(data);
-//                }
-//            }
-//
-//        }
-//
-//        // Update the RecyclerView with the filtered list
-//        adapter.setList(filteredList);
-//        adapter.notifyDataSetChanged();
-//    }
 
 
-    private void showOptionsPopup() {
-        // Create an AlertDialog builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select an Option");
-
-        // Add options to the dialog
-        builder.setItems(new CharSequence[]{"Import WIP", "Export WIP"}, new DialogInterface.OnClickListener() {
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Handle the selected option
-                switch (which) {
-                    case 0:
-                        // Import WIP option selected
-                        // Implement your import logic here
-                        break;
-                    case 1:
-                        // Export WIP option selected
-                        // Implement your export logic here
-                        break;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.noData.setVisibility(View.GONE);
+                binding.listView.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.etSearch.getText().toString().length() == 0) {
+                    binding.noData.setVisibility(View.VISIBLE);
+                    binding.listView.setVisibility(View.GONE);
+                    if (adapter != null) {
+                        adapter.filter("");
+                    }
+                } else {
+                    String text = binding.etSearch.getText().toString().toLowerCase(Locale.getDefault());
+                    binding.noData.setVisibility(View.GONE);
+                    binding.listView.setVisibility(View.VISIBLE);
+                    if (adapter != null) {
+                        adapter.filter(text);
+                    }
                 }
+
             }
         });
 
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+
     }
 
-    private void setRecyclerView(boolean isHorizontal) {
-        LinearLayoutManager layoutManager;
 
-        if (isHorizontal) {
-            // Set the layout manager to horizontal
-            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        } else {
-            // Set the layout manager to vertical
-            layoutManager = new LinearLayoutManager(this);
-        }
 
-        adapter = new Adapter(this, list);
-        binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.setLayoutManager(layoutManager);
-    }
 
 }

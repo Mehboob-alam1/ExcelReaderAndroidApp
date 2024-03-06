@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,15 +15,20 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FilterActivity extends AppCompatActivity {
+    private CheckBox checkBoxWord, checkBoxPhrases, checkBoxIdioms,
+            checkBoxBusiness, checkBoxSports, checkBoxCasual;
+
     private SharedPreferences sharedPreferences;
-    private RadioGroup radioGroupCategory, radioGroupTags;
-    private RadioButton radioButtonWord, radioButtonPhrases, radioButtonIdioms,
-            radioButtonBusiness, radioButtonCasual, radioButtonSports;
+
+    private Set<String> selectedFilters;
     private Button btnApplyFilter, btnClearFilters;
 
     @Override
@@ -30,107 +36,88 @@ public class FilterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // Initialize CheckBoxes
+        checkBoxWord = findViewById(R.id.radioButtonWord);
+        checkBoxPhrases = findViewById(R.id.radioButtonPhrases);
+        checkBoxIdioms = findViewById(R.id.radioButtonIdioms);
+        checkBoxBusiness = findViewById(R.id.radioButtonBusiness);
+        checkBoxSports = findViewById(R.id.radioButtonSports);
+        checkBoxCasual = findViewById(R.id.radioButtonCasual);
 
+        // Initialize SharedPreferences
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
+        // Load previously selected filters
+        loadFilters();
 
-        // Initialize your radio groups and buttons
-        radioGroupCategory = findViewById(R.id.radioGroupCategory);
-        radioGroupTags = findViewById(R.id.radioGroupTags);
-
-        radioButtonWord = findViewById(R.id.radioButtonWord);
-        radioButtonPhrases = findViewById(R.id.radioButtonPhrases);
-        radioButtonIdioms = findViewById(R.id.radioButtonIdioms);
-
-        radioButtonBusiness = findViewById(R.id.radioButtonBusiness);
-        radioButtonCasual = findViewById(R.id.radioButtonCasual);
-        radioButtonSports = findViewById(R.id.radioButtonSports);
-
-        btnApplyFilter = findViewById(R.id.btnApplyFilter);
-        btnClearFilters = findViewById(R.id.btnClearFilters);
-
-        // Apply filter button click listener
+        // Set onClickListener for Apply Filter button
+        Button btnApplyFilter = findViewById(R.id.btnApplyFilter);
         btnApplyFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 applyFilters();
             }
         });
 
-        // Clear filters button click listener
+        // Set onClickListener for Clear Filters button
+        Button btnClearFilters = findViewById(R.id.btnClearFilters);
         btnClearFilters.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 clearFilters();
             }
         });
+    }
 
-        loadFilterPreferences();
+    private void loadFilters() {
+        selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
 
+        // Update checkboxes based on the loaded filters
+        checkBoxWord.setChecked(selectedFilters.contains("Word"));
+        checkBoxPhrases.setChecked(selectedFilters.contains("Phrase"));
+        checkBoxIdioms.setChecked(selectedFilters.contains("Idiom"));
+        checkBoxBusiness.setChecked(selectedFilters.contains("Business"));
+        checkBoxSports.setChecked(selectedFilters.contains("Sports"));
+        checkBoxCasual.setChecked(selectedFilters.contains("Casual"));
     }
 
     private void applyFilters() {
-        int selectedCategoryRadioButtonId = radioGroupCategory.getCheckedRadioButtonId();
-        int selectedTagRadioButtonId = radioGroupTags.getCheckedRadioButtonId();
+        // Update selected filters set
+        selectedFilters.clear();
+        if (checkBoxWord.isChecked()) selectedFilters.add("Word");
+        if (checkBoxPhrases.isChecked()) selectedFilters.add("Phrase");
+        if (checkBoxIdioms.isChecked()) selectedFilters.add("Idiom");
+        if (checkBoxBusiness.isChecked()) selectedFilters.add("Business");
+        if (checkBoxSports.isChecked()) selectedFilters.add("Sports");
+        if (checkBoxCasual.isChecked()) selectedFilters.add("Casual");
 
-        // Get the selected values from radio buttons
-        String selectedCategory = getSelectedRadioButtonText(selectedCategoryRadioButtonId);
-        String selectedTag = getSelectedRadioButtonText(selectedTagRadioButtonId);
+        // Save the selected filters in SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet("selectedFilters", selectedFilters);
+        editor.apply();
 
-        // Save the selected values to SharedPreferences
-        saveFilterPreferences(selectedCategory, selectedTag);
+        // You can now use the selected filters for your filtering logic
+        // For example, you might want to retrieve the values later using:
+        // Set<String> selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
+        // ... and use 'selectedFilters' in your filtering logic
 
-        // Create an intent to send back the filtered list
-        finish();
-
+        Toast.makeText(this, "Filters Applied!", Toast.LENGTH_SHORT).show();
     }
 
     private void clearFilters() {
-        saveFilterPreferences(null, null);
-
-        // Uncheck all radio buttons
-        radioGroupCategory.clearCheck();
-        radioGroupTags.clearCheck();
-
-        // Create an intent to send back the cleared list
-
-        // You can pass other relevant data if needed
-
-        finish();
-    }
-
-    private void saveFilterPreferences(String selectedCategory, String selectedTag) {
+        // Clear the selected filters in SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("selected_category", selectedCategory);
-        editor.putString("selected_tag", selectedTag);
+        editor.remove("selectedFilters");
         editor.apply();
+
+        // Clear the checkboxes
+        checkBoxWord.setChecked(false);
+        checkBoxPhrases.setChecked(false);
+        checkBoxIdioms.setChecked(false);
+        checkBoxBusiness.setChecked(false);
+        checkBoxSports.setChecked(false);
+        checkBoxCasual.setChecked(false);
+
+        Toast.makeText(this, "Filters Cleared!", Toast.LENGTH_SHORT).show();
     }
-
-    private void loadFilterPreferences() {
-        // Load saved filter preferences and set radio buttons accordingly
-        String selectedCategory = sharedPreferences.getString("selected_category", null);
-        String selectedTag = sharedPreferences.getString("selected_tag", null);
-
-        // Check the radio button based on loaded preferences
-        checkRadioButtonByText(radioGroupCategory, selectedCategory);
-        checkRadioButtonByText(radioGroupTags, selectedTag);
-    }
-
-    private void checkRadioButtonByText(RadioGroup radioGroup, String text) {
-        if (text != null) {
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
-                if (radioButton.getText().toString().equalsIgnoreCase(text)) {
-                    radioButton.setChecked(true);
-                    break;
-                }
-            }
-        }
-    }
-
-    private String getSelectedRadioButtonText(int radioButtonId) {
-        RadioButton radioButton = findViewById(radioButtonId);
-        return radioButton != null ? radioButton.getText().toString() : null;
-    }
-
 }

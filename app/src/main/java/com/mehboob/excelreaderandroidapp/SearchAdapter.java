@@ -1,24 +1,37 @@
 package com.mehboob.excelreaderandroidapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
-public class SearchAdapter extends BaseAdapter {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private ArrayList<ExcelDataModel> dataSet;
     private ArrayList<ExcelDataModel> filteredData;
     private Context mContext;
 
     // View lookup cache
-    private static class ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtWord;
         TextView txtMeaning;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            txtWord = itemView.findViewById(R.id.txtWordL);
+        txtMeaning = itemView.findViewById(R.id.txtMeaningL);
+        }
     }
 
     public SearchAdapter(ArrayList<ExcelDataModel> data, Context context) {
@@ -27,14 +40,32 @@ public class SearchAdapter extends BaseAdapter {
         this.mContext = context;
     }
 
+
+    @NonNull
     @Override
-    public int getCount() {
-        return filteredData.size();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.sample_list,parent,false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return filteredData.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        ExcelDataModel dataModel = filteredData.get(position);
+        holder.txtWord.setText(dataModel.getWip());
+        holder.txtMeaning.setText(dataModel.getMeaning());
+
+        holder.itemView.setOnClickListener(v -> {
+
+
+            Gson gson= new Gson();
+
+            Intent i = new Intent(mContext, WordDetailActivity.class);
+            i.putExtra("data",gson.toJson(dataModel));
+           mContext.startActivity(i);
+        });
+
     }
 
     @Override
@@ -43,27 +74,10 @@ public class SearchAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.sample_list, parent, false);
-            viewHolder.txtWord = convertView.findViewById(R.id.txtWordL);
-            viewHolder.txtMeaning = convertView.findViewById(R.id.txtMeaningL);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        ExcelDataModel dataModel = filteredData.get(position);
-        viewHolder.txtWord.setText(dataModel.getWip());
-        viewHolder.txtMeaning.setText(dataModel.getMeaning());
-
-        return convertView;
+    public int getItemCount() {
+        return filteredData.size();
     }
+
 
     public void filter(String query) {
         query = query.toLowerCase();
