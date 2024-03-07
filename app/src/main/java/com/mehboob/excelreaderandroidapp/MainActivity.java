@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.mehboob.excelreaderandroidapp.databinding.ActivityMainBinding;
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         isHorizontalOrientation = sharedPreferences.getBoolean("isHorizontal", true);
-        sharedPreferences1 = getPreferences(Context.MODE_PRIVATE);
+
 
 
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         list = new ArrayList<>();
-        filteredList = new ArrayList<>(list);
+
 
 
         list.add(new ExcelDataModel(1, "Word", "Scamper", "run with light steps out of fear or excitement", "The mouse scampered away from the cat into its hole.", "Casual", 0, 5));
@@ -115,9 +116,13 @@ public class MainActivity extends AppCompatActivity {
 
         binding.imageSearch.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SearchActivity.class)));
 
-        if (sharedPreferences1 != null) {
-            selectedFilters = sharedPreferences1.getStringSet("selectedFilters", new HashSet<>());
+        if (sharedPreferences != null) {
+            selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
 
+            for (int i = 0; i <selectedFilters.size() ; i++) {
+
+                Toast.makeText(this, ""+selectedFilters, Toast.LENGTH_SHORT).show();
+            }
             loadAndApplyFilters(list, selectedFilters);
         }
     }
@@ -136,21 +141,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAndApplyFilters(ArrayList<ExcelDataModel> list, Set<String> selectedFilters) {
-        // Load filter preferences and apply filters
-//        String selectedCategory = sharedPreferences.getString("selected_category", null);
-//        String selectedTag = sharedPreferences.getString("selected_tag", null);
-//
-//        Log.d("FilterM", selectedCategory + " ");
-//        Log.d("FilterM", selectedTag + " ");
-//        // Apply filters if preferences are set
-//        if (selectedCategory != null || selectedTag != null) {
-//            applyFilter(selectedCategory, selectedTag);
-//        }
+
+        filteredList = new ArrayList<>(list);
 
 
-        filteredList.clear();
+
         for (ExcelDataModel data : list) {
             if (data != null) {
+
                 if (selectedFilters.contains(data.getCategory()) || selectedFilters.contains(data.getCustomTag())) {
                     filteredList.add(data);
                 }

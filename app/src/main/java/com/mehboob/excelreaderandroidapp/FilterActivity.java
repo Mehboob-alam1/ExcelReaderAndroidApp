@@ -95,6 +95,7 @@ public class FilterActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet("selectedFilters", selectedFilters);
         editor.apply();
+        editor.commit();
 
         // You can now use the selected filters for your filtering logic
         // For example, you might want to retrieve the values later using:
