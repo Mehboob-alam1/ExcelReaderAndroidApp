@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class FilterActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class FilterActivity extends AppCompatActivity {
 
     private Set<String> selectedFilters;
     private Button btnApplyFilter, btnClearFilters;
+    public SharedPref sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class FilterActivity extends AppCompatActivity {
         checkBoxBusiness = findViewById(R.id.radioButtonBusiness);
         checkBoxSports = findViewById(R.id.radioButtonSports);
         checkBoxCasual = findViewById(R.id.radioButtonCasual);
+        sharedPref= new SharedPref(this);
 
         // Initialize SharedPreferences
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
@@ -52,64 +55,46 @@ public class FilterActivity extends AppCompatActivity {
 
         // Set onClickListener for Apply Filter button
         Button btnApplyFilter = findViewById(R.id.btnApplyFilter);
-        btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                applyFilters();
-            }
-        });
+        btnApplyFilter.setOnClickListener(view -> applyFilters());
 
         // Set onClickListener for Clear Filters button
         Button btnClearFilters = findViewById(R.id.btnClearFilters);
-        btnClearFilters.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearFilters();
-            }
-        });
+        btnClearFilters.setOnClickListener(view -> clearFilters());
     }
 
     private void loadFilters() {
         selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
 
-        // Update checkboxes based on the loaded filters
-        checkBoxWord.setChecked(selectedFilters.contains("Word"));
-        checkBoxPhrases.setChecked(selectedFilters.contains("Phrase"));
-        checkBoxIdioms.setChecked(selectedFilters.contains("Idiom"));
-        checkBoxBusiness.setChecked(selectedFilters.contains("Business"));
-        checkBoxSports.setChecked(selectedFilters.contains("Sports"));
-        checkBoxCasual.setChecked(selectedFilters.contains("Casual"));
+        checkBoxWord.setChecked(sharedPref.fetchWord());
+        checkBoxPhrases.setChecked(sharedPref.fetchPhrase());
+        checkBoxIdioms.setChecked(sharedPref.fetchIdom());
+
+        checkBoxBusiness.setChecked(sharedPref.fetchBusiness());
+        checkBoxSports.setChecked(sharedPref.fetchSports());
+        checkBoxCasual.setChecked(sharedPref.fetchCasual());
+
+
+
     }
 
     private void applyFilters() {
         // Update selected filters set
-        selectedFilters.clear();
-        if (checkBoxWord.isChecked()) selectedFilters.add("Word");
-        if (checkBoxPhrases.isChecked()) selectedFilters.add("Phrase");
-        if (checkBoxIdioms.isChecked()) selectedFilters.add("Idiom");
-        if (checkBoxBusiness.isChecked()) selectedFilters.add("Business");
-        if (checkBoxSports.isChecked()) selectedFilters.add("Sports");
-        if (checkBoxCasual.isChecked()) selectedFilters.add("Casual");
 
-        // Save the selected filters in SharedPreferences
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet("selectedFilters", selectedFilters);
-        editor.apply();
-        editor.commit();
+        sharedPref.saveWord(checkBoxWord.isChecked());
+        sharedPref.savePhrase(checkBoxPhrases.isChecked());
+        sharedPref.saveIdom(checkBoxIdioms.isChecked());
+        sharedPref.saveBusiness(checkBoxBusiness.isChecked());
+        sharedPref.saveSports(checkBoxSports.isChecked());
+        sharedPref.saveCasual(checkBoxCasual.isChecked());
 
-        // You can now use the selected filters for your filtering logic
-        // For example, you might want to retrieve the values later using:
-        // Set<String> selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
-        // ... and use 'selectedFilters' in your filtering logic
+
 
         Toast.makeText(this, "Filters Applied!", Toast.LENGTH_SHORT).show();
     }
 
     private void clearFilters() {
         // Clear the selected filters in SharedPreferences
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("selectedFilters");
-        editor.apply();
+        sharedPref.clearPref();
 
         // Clear the checkboxes
         checkBoxWord.setChecked(false);

@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     Adapter adapter;
     SharedPreferences sharedPreferences1;
     LinearLayoutManager layoutManager;
+    private SharedPref sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +50,13 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         isHorizontalOrientation = sharedPreferences.getBoolean("isHorizontal", true);
 
+        sharedPref = new SharedPref(this);
 
 
-
-
-         layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
 
 
         list = new ArrayList<>();
-
 
 
         list.add(new ExcelDataModel(1, "Word", "Scamper", "run with light steps out of fear or excitement", "The mouse scampered away from the cat into its hole.", "Casual", 0, 5));
@@ -116,14 +116,11 @@ public class MainActivity extends AppCompatActivity {
 
         binding.imageSearch.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SearchActivity.class)));
 
-        if (sharedPreferences != null) {
+        if (sharedPref.fetchWord()) {
             selectedFilters = sharedPreferences.getStringSet("selectedFilters", new HashSet<>());
 
-            for (int i = 0; i <selectedFilters.size() ; i++) {
 
-                Toast.makeText(this, ""+selectedFilters, Toast.LENGTH_SHORT).show();
-            }
-            loadAndApplyFilters(list, selectedFilters);
+            loadAndApplyFilters(list);
         }
     }
 
@@ -140,20 +137,61 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void loadAndApplyFilters(ArrayList<ExcelDataModel> list, Set<String> selectedFilters) {
+    private void loadAndApplyFilters(ArrayList<ExcelDataModel> list) {
 
-        filteredList = new ArrayList<>(list);
+        filteredList = new ArrayList<>();
 
-
+        // Track if there are multiple categories selected
+        boolean multipleCategoriesSelected = false;
 
         for (ExcelDataModel data : list) {
             if (data != null) {
+                boolean categoryMatches = false;
 
-                if (selectedFilters.contains(data.getCategory()) || selectedFilters.contains(data.getCustomTag())) {
+                // Check if the category matches any of the selected category filters
+                if ((data.getCategory().equals("Word") && sharedPref.fetchWord()) ||
+                        (data.getCategory().equals("Phrase") && sharedPref.fetchPhrase()) ||
+                        (data.getCategory().equals("Idiom") && sharedPref.fetchIdom()) ||
+                        (data.getCategory().equals("Business") && sharedPref.fetchBusiness()) ||
+                        (data.getCategory().equals("Sports") && sharedPref.fetchSports()) ||
+                        (data.getCategory().equals("Casual") && sharedPref.fetchCasual())) {
+                    categoryMatches = true;
+
+                    // If more than one category is selected, track it
+                    if (multipleCategoriesSelected) {
+                        // If multiple categories are selected, check if the tag matches any of the selected tags
+                        if ((data.getCustomTag().equals("Word") && sharedPref.fetchWord()) ||
+                                (data.getCustomTag().equals("Phrase") && sharedPref.fetchPhrase()) ||
+                                (data.getCustomTag().equals("Idiom") && sharedPref.fetchIdom()) ||
+                                (data.getCustomTag().equals("Business") && sharedPref.fetchBusiness()) ||
+                                (data.getCustomTag().equals("Sports") && sharedPref.fetchSports()) ||
+                                (data.getCustomTag().equals("Casual") && sharedPref.fetchCasual())) {
+                            filteredList.add(data);
+                        }
+                    } else {
+                        // If only one category is selected, apply filtering based on tags
+                        if ((data.getCustomTag().equals("Word") && sharedPref.fetchWord()) ||
+                                (data.getCustomTag().equals("Phrase") && sharedPref.fetchPhrase()) ||
+                                (data.getCustomTag().equals("Idiom") && sharedPref.fetchIdom()) ||
+                                (data.getCustomTag().equals("Business") && sharedPref.fetchBusiness()) ||
+                                (data.getCustomTag().equals("Sports") && sharedPref.fetchSports()) ||
+                                (data.getCustomTag().equals("Casual") && sharedPref.fetchCasual())) {
+                            filteredList.add(data);
+                        }
+                    }
+                }
+
+                // Check if more than one category is selected
+                if (categoryMatches && multipleCategoriesSelected) {
+                    // If more than one category is selected, add the data to the filtered list
                     filteredList.add(data);
                 }
-            }
 
+                // If the category matches, and more than one category is selected, set the flag
+                if (categoryMatches && !multipleCategoriesSelected) {
+                    multipleCategoriesSelected = true;
+                }
+            }
         }
 
         // Update the RecyclerView with the filtered list
@@ -161,24 +199,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-//    private void applyFilter(String selectedCategory, String selectedTag) {
-//        // Filter the list based on the selected category and tag
-//        filteredList.clear();
-//        for (ExcelDataModel data : list) {
-//            if (data != null) {
-//                if (data.getCategory().equals(selectedCategory) || data.getCustomTag().equals(selectedTag)) {
-//                    Log.d("Filter", selectedCategory + " Equal " + data.getCategory());
-//                    Log.d("Filter", selectedTag + " Equal " + data.getCustomTag());
-//                    filteredList.add(data);
-//                }
-//            }
-//
-//        }
-//
-//        // Update the RecyclerView with the filtered list
-//        adapter.setList(filteredList);
-//        adapter.notifyDataSetChanged();
-//    }
+
 
 
     private void showOptionsPopup() {

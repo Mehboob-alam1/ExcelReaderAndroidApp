@@ -24,16 +24,91 @@ public class SharedPref {
         preferences= context.getSharedPreferences(FILTER_CASUAL,Context.MODE_PRIVATE);
     }
 
-    private void saveWord(String word){
+    public void saveWord(boolean isChecked){
 
         SharedPreferences.Editor editor=preferences.edit();
-        editor.putString(FILTER_WORD,word);
+        editor.putBoolean(FILTER_WORD,isChecked);
         editor.apply();
         editor.commit();
     }
 
-    public String fetchWord(){
+    public boolean fetchWord(){
 
-        return preferences.getString(FILTER_WORD,"");
+        return preferences.getBoolean(FILTER_WORD,false);
     }
+
+    public void savePhrase(boolean isChecked){
+
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putBoolean(FILTER_PHRASE,isChecked);
+        editor.apply();
+        editor.commit();
+    }
+
+    public boolean  fetchPhrase(){
+
+        return preferences.getBoolean(FILTER_PHRASE,false);
+    }
+
+    public void saveIdom(boolean isChecked){
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putBoolean(FILTER_IDIOM,isChecked);
+        editor.apply();
+        editor.commit();
+    }
+
+    public boolean fetchIdom(){
+        return  preferences.getBoolean(FILTER_IDIOM,false);
+    }
+
+    public void saveBusiness(boolean isChecked){
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putBoolean(FILTER_BUSINESS,isChecked);
+        editor.apply();
+        editor.commit();
+    }
+    public boolean fetchBusiness(){
+
+        return preferences.getBoolean(FILTER_BUSINESS,false);
+    }
+
+    public void saveSports(boolean isChecked){
+
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putBoolean(FILTER_SPORTS,isChecked);
+        editor.apply();
+        editor.commit();
+    }
+    public boolean fetchSports(){
+
+        return preferences.getBoolean(FILTER_SPORTS,false);
+    }
+
+    public void saveCasual(boolean isChecked){
+
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putBoolean(FILTER_CASUAL,isChecked);
+        editor.apply();
+        editor.commit();
+    }
+
+
+    public boolean fetchCasual(){
+        return preferences.getBoolean(FILTER_CASUAL,false);
+    }
+
+
+    public void clearPref(){
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.remove(FILTER_PHRASE);
+        editor.remove(FILTER_WORD);
+        editor.remove(FILTER_IDIOM);
+        editor.remove(FILTER_BUSINESS);
+        editor.remove(FILTER_SPORTS);
+        editor.remove(FILTER_CASUAL);
+        editor.apply();
+
+
+    }
+
 }

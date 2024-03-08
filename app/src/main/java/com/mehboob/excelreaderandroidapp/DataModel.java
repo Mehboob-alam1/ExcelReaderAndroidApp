@@ -1,12 +1,13 @@
 package com.mehboob.excelreaderandroidapp;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "excel_data")
 
-public class ExcelDataModel implements Parcelable {
+public class DataModel {
 
-
+    @PrimaryKey(autoGenerate = true)
     private int sr;
     private String category;
     private String wip;
@@ -19,7 +20,7 @@ public class ExcelDataModel implements Parcelable {
     private int displayCount;
 
 
-    public ExcelDataModel(int sr, String category, String wip, String meaning, String sampleSentence, String customTag, int readCount, int displayCount) {
+    public DataModel(int sr, String category, String wip, String meaning, String sampleSentence, String customTag, int readCount, int displayCount) {
         this.sr = sr;
         this.category = category;
         this.wip = wip;
@@ -93,47 +94,4 @@ public class ExcelDataModel implements Parcelable {
     public void setDisplayCount(int displayCount) {
         this.displayCount = displayCount;
     }
-
-
-
-    protected ExcelDataModel(Parcel in) {
-        sr = in.readInt();
-        category = in.readString();
-        wip = in.readString();
-        meaning = in.readString();
-        sampleSentence = in.readString();
-        customTag = in.readString();
-        readCount = in.readInt();
-        displayCount = in.readInt();
-    }
-
-    public static final Creator<ExcelDataModel> CREATOR = new Creator<ExcelDataModel>() {
-        @Override
-        public ExcelDataModel createFromParcel(Parcel in) {
-            return new ExcelDataModel(in);
-        }
-
-        @Override
-        public ExcelDataModel[] newArray(int size) {
-            return new ExcelDataModel[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(sr);
-        dest.writeString(category);
-        dest.writeString(wip);
-        dest.writeString(meaning);
-        dest.writeString(sampleSentence);
-        dest.writeString(customTag);
-        dest.writeInt(readCount);
-        dest.writeInt(displayCount);
-    }
-
 }
