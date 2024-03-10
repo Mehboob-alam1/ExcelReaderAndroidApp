@@ -1,8 +1,11 @@
 package com.mehboob.excelreaderandroidapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -15,20 +18,22 @@ public class WordDetailActivity extends AppCompatActivity {
 
 
     private ActivityWordDetailBinding binding;
-    private ExcelDataDao excelDataDao;
 
     private String data;
-    private ExcelDataModel dataGet;
+    private DataModel dataGet;
     private int itemId;
+    int newCount;
+    private ExcelDataViewModel excelDataViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityWordDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        excelDataDao = AppDatabase.getInstance(this).excelDataDao();
+        excelDataViewModel = new ViewModelProvider(this).get(ExcelDataViewModel.class);
 
 
         data=getIntent().getStringExtra("data");
+
 
 
 
@@ -36,7 +41,7 @@ public class WordDetailActivity extends AppCompatActivity {
             finish();
         });
 
-        Type dataType = new TypeToken<ExcelDataModel>() {}.getType();
+        Type dataType = new TypeToken<DataModel>() {}.getType();
         Gson gson = new Gson();
          dataGet = gson.fromJson(data, dataType);
 
@@ -44,17 +49,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
 
 
-         binding.txtWord.setText(dataGet.getWip());
-         binding.txtMeaning.setText(dataGet.getMeaning());
-         binding.txtSampleSentence.setText(dataGet.getSampleSentence());
-         binding.etReadCount.setText(dataGet.getReadCount() +" times");
-         binding.txtViewCount.setText(dataGet.getDisplayCount() + " times");
-
-
-        updateViewCount(dataGet.getSr());
-        displayViewCount();
-        displayReadCount();
-
+        Toast.makeText(this, ""+itemId, Toast.LENGTH_SHORT).show();
 
         binding.btnUpdate.setOnClickListener(v -> {
 
@@ -63,45 +58,51 @@ public class WordDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Can't be empty", Toast.LENGTH_SHORT).show();
             }else{
 
-                updateReadCount(Integer.parseInt(binding.etReadCount.getText().toString()));
-                displayReadCount();
+
+                excelDataViewModel.updateReadCount(itemId,Integer.parseInt(binding.etReadCount.getText().toString()));
             }
         });
+
+         binding.txtWord.setText(dataGet.getWip());
+         binding.txtMeaning.setText(dataGet.getMeaning());
+         binding.txtSampleSentence.setText(dataGet.getSampleSentence());
+//         binding.etReadCount.setText(dataGet.getReadCount() +"");
+//         binding.txtViewCount.setText(dataGet.getDisplayCount() + " times");
+
+
+
+
     }
 
-    private void updateViewCount(int itemId) {
-        DataModel dataModel = excelDataDao.getById(itemId);
-        if (dataModel != null) {
-            dataModel.setDisplayCount(dataModel.getDisplayCount() + 1);
-            excelDataDao.update(dataModel);
-        }
-    }
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        excelDataViewModel.getData(itemId).observe(this,dataModel -> {
+
+            Log.d("NewData",dataModel.toString());
+
+            if (dataModel!=null) {
 
 
 
-    private void displayViewCount() {
-        DataModel dataModel = excelDataDao.getById(itemId);
-        if (dataModel != null) {
-            int viewCount = dataModel.getDisplayCount();
-            binding.txtViewCount.setText(viewCount + " times");
-        }
-    }
 
-    // Add this method to update the read count in Room database
-    private void updateReadCount(int newReadCount) {
-       DataModel dataModel = excelDataDao.getById(itemId);
-        if (dataModel != null) {
-            dataModel.setReadCount(newReadCount);
-            excelDataDao.update(dataModel);
-        }
-    }
+                newCount=    dataModel.getDisplayCount()+1;
 
-    // Add this method to get and display the read count
-    private void displayReadCount() {
-        DataModel dataModel = excelDataDao.getById(itemId);
-        if (dataModel != null) {
-            int readCount = dataModel.getReadCount();
-          binding.etReadCount.setText(readCount+"");
-        }
+
+
+                binding.etReadCount.setText(dataModel.getReadCount() + "");
+                binding.txtViewCount.setText(dataModel.getDisplayCount() + " times");
+
+                excelDataViewModel.getData(itemId).removeObservers(this);
+
+//                Toast.makeText(this, ""+dataModel.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        excelDataViewModel.updateDisplayCount(itemId,newCount);
+
+
+
     }
 }

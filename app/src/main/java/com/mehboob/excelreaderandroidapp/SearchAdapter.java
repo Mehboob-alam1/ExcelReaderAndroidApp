@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    private ArrayList<ExcelDataModel> dataSet;
-    private ArrayList<ExcelDataModel> filteredData;
+    private ArrayList<DataModel> dataSet;
+    private ArrayList<DataModel> filteredData;
     private Context mContext;
 
     // View lookup cache
@@ -34,7 +34,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }
     }
 
-    public SearchAdapter(ArrayList<ExcelDataModel> data, Context context) {
+    public SearchAdapter(ArrayList<DataModel> data, Context context) {
         this.dataSet = data;
         this.filteredData = new ArrayList<>(data);
         this.mContext = context;
@@ -52,7 +52,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        ExcelDataModel dataModel = filteredData.get(position);
+       DataModel dataModel = filteredData.get(position);
         holder.txtWord.setText(dataModel.getWip());
         holder.txtMeaning.setText(dataModel.getMeaning());
 
@@ -87,7 +87,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         if (query.isEmpty()) {
             filteredData.addAll(dataSet);
         } else {
-            for (ExcelDataModel data : dataSet) {
+            for (DataModel data : dataSet) {
                 String word = data.getWip();
                 String meaning = data.getMeaning();
 

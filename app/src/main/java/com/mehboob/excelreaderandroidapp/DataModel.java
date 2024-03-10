@@ -1,5 +1,6 @@
 package com.mehboob.excelreaderandroidapp;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,14 +10,26 @@ public class DataModel {
 
     @PrimaryKey(autoGenerate = true)
     private int sr;
+
+    @ColumnInfo(name="category")
     private String category;
+    @ColumnInfo(name="wip")
+
     private String wip;
+    @ColumnInfo(name="meaning")
+
     private String meaning;
+    @ColumnInfo(name="sampleSentence")
+
     private String sampleSentence;
+    @ColumnInfo(name="customTag")
 
     private String customTag;
+    @ColumnInfo(name="readCount")
 
     private int readCount;
+    @ColumnInfo(name="displayCount")
+
     private int displayCount;
 
 
@@ -29,6 +42,9 @@ public class DataModel {
         this.customTag = customTag;
         this.readCount = readCount;
         this.displayCount = displayCount;
+    }
+
+    public DataModel() {
     }
 
     public int getSr() {
@@ -93,5 +109,20 @@ public class DataModel {
 
     public void setDisplayCount(int displayCount) {
         this.displayCount = displayCount;
+    }
+
+
+    @Override
+    public String toString() {
+        return "DataModel{" +
+                "sr=" + sr +
+                ", category='" + category + '\'' +
+                ", wip='" + wip + '\'' +
+                ", meaning='" + meaning + '\'' +
+                ", sampleSentence='" + sampleSentence + '\'' +
+                ", customTag='" + customTag + '\'' +
+                ", readCount=" + readCount +
+                ", displayCount=" + displayCount +
+                '}';
     }
 }

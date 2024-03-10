@@ -17,14 +17,14 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.Holder>{
     private Context context;
-    private ArrayList<ExcelDataModel> list;
+    private List<DataModel> list;
 
-    public Adapter(Context context, ArrayList<ExcelDataModel> list) {
+    public Adapter(Context context, List<DataModel> list) {
         this.context = context;
         this.list = list;
     }
 
-    public void setList(ArrayList<ExcelDataModel> list) {
+    public void setList(List<DataModel> list) {
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();
@@ -41,7 +41,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder>{
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
 
-     ExcelDataModel data=   list.get(position);
+     DataModel data=   list.get(position);
      holder.txtWordType.setText(data.getCategory());
      holder.txtCount.setText(" "+data.getDisplayCount() +" times" );
      holder.txtWord.setText(data.getWip());

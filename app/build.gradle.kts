@@ -49,14 +49,14 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
 
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-    implementation ("androidx.room:room-runtime:2.6.0")
-    annotationProcessor ("androidx.room:room-compiler:2.6.0")
-    implementation ("androidx.room:room-paging:2.6.0")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    annotationProcessor ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
 }
